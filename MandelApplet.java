@@ -23,7 +23,7 @@ import java.util.Arrays;
  * out and displays the part of the complex plane that previously filled the
  * whole applet inside the rectangle.
  *
- * @author Michael Borgwardt <brazil@brazils-animeland.de>
+ * @author Michael Borgwardt <brazzy@gmail.com>
  */
 public class MandelApplet extends JApplet implements Runnable{
 

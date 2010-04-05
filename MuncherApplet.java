@@ -2,6 +2,17 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 
+/**
+ * This applet visualizes the concept of emergent behaviour as it occurs in a cellular automaton. 
+ * The automaton has the following rules:
+ * - Each pixel represents a cell
+ * - Each cell has one of 16 colors (numbered 1 to 16), which are assigned randomly at the start.
+ * - The left and right edge and the top and bottom edge of the "playing field" are connected.
+ * - At each turn, every cell that has at least one neighbour cell with a color that is one higher
+ *   changes its color to that "next higher" color. Additionally color 1 is considered "next higher" to color 16.
+ * 
+ * @author Michael Borgwardt <brazzy@gmail.com>
+ */
 public class MuncherApplet extends java.applet.Applet implements Runnable{
   
   private int paletteSize;
@@ -13,7 +24,6 @@ public class MuncherApplet extends java.applet.Applet implements Runnable{
   private byte[][] arena;
   private byte[][] newarena;
   private byte[][] dummy;
-//  private long date;
   private Random rnd;
   private boolean stop;
   private boolean live;
@@ -75,8 +85,6 @@ public class MuncherApplet extends java.applet.Applet implements Runnable{
         }
       }
 
-//      System.out.print("Iteration "+iteration);
-//      date = System.currentTimeMillis();
       for(int i=0;i<width;i++){
         for(int j=0;j<height;j++){
           eater = (arena[i][j]+1)%paletteSize;
@@ -91,7 +99,6 @@ public class MuncherApplet extends java.applet.Applet implements Runnable{
       dummy = newarena;
       newarena=arena;
       arena=dummy;
-//      System.out.println(": " + (System.currentTimeMillis()-date));
       iteration++;
     }
     palette = null;
