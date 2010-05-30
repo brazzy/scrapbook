@@ -68,28 +68,37 @@ public class TreeTest
         tree.insert(-17);
         tree.insert(38);
 
-        tree.remove(42);
+        assertTrue(tree.remove(42));
         assertFalse(tree.contains(42));
+        assertFalse(tree.remove(42));
         assertTrue(tree.contains(-1));
-        tree.remove(-1);
-        assertFalse(tree.contains(42));
-        assertTrue(tree.contains(100));
-        tree.remove(100);
-        assertFalse(tree.contains(100));
-        assertTrue(tree.contains(0));
-        tree.remove(0);
-        assertFalse(tree.contains(0));
-        assertTrue(tree.contains(-17));
-        tree.remove(-17);
-        assertFalse(tree.contains(-17));
-        assertTrue(tree.contains(38));
-        tree.remove(38);
-        assertFalse(tree.contains(38));
 
-        assertFalse(tree.contains(42));
+        assertTrue(tree.remove(-1));
+        assertFalse(tree.contains(-1));
+        assertFalse(tree.remove(-1));
+        assertTrue(tree.contains(100));
+
+        assertTrue(tree.remove(100));
+        assertFalse(tree.contains(100));
+        assertFalse(tree.remove(100));
+        assertTrue(tree.contains(0));
+
+        assertTrue(tree.remove(0));
+        assertFalse(tree.contains(0));
+        assertFalse(tree.remove(0));
+        assertTrue(tree.contains(-17));
+
+        assertTrue(tree.remove(-17));
+        assertFalse(tree.contains(-17));
+        assertFalse(tree.remove(-17));
+        assertTrue(tree.contains(38));
+
+        assertTrue(tree.remove(38));
+        assertFalse(tree.contains(38));
+        assertFalse(tree.remove(38));
+
         assertTrue(tree.isEmpty());
     }
-
 
     @Test
     public void testIterateEmpty(){

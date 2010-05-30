@@ -141,15 +141,26 @@ public class AvlTree implements Iterable<Long>
     }
 
     public boolean contains(long val){
+        return node(val) != null;
+    }
+
+    private AvlTree node(long val){
         if(value == null){
-            return false;
+            return null;
         } else if(this.value == val){
-            return true;
+            return this;
         } else if (val < this.value) {
-            return left != null && left.contains(val);
+            return left == null ? null : left.node(val);
         } else {
-            return right != null && right.contains(val);
+            return right == null ? null : right.node(val);
         }
+    }
+
+    private void pullUp(AvlTree child){
+        assert child == left || child == right;
+        value = child.value;
+        left = child.left;
+        right = child.right;
     }
 
     public boolean remove(long val)
@@ -159,26 +170,37 @@ public class AvlTree implements Iterable<Long>
         }
 
         if(this.value == val){
-            if(left == null){
-                ensureRight();
-                value = right.value;
-                left = right.left;
-                right = right.right;
-            } else if(right == null){
-                ensureLeft();
-                value = left.value;
-                right = left.right;
-                left = left.left;
+            if(left == null && right != null){
+                pullUp(right);
+            } else if(right == null && left != null){
+                pullUp(left);
+            } else if(right == null && left == null){
+                value = null;
             } else{
                 AvlTree pre = predecessor();
+                Long preVal = pre.value;
                 remove(pre.value);
-                this.value = pre.value;
+                this.value = preVal;
             }
             return true;
         } else if (val < this.value) {
-            return left != null && left.remove(value);
+            if(left == null){
+                return false;
+            } else if(left.isLeaf() && left.value == val){
+                left = null;
+                return true;
+            } else{
+                return left.remove(val);
+            }
         } else {
-            return right != null && right.remove(value);
+            if(right == null){
+                return false;
+            } else if(right.isLeaf() && right.value == val){
+                right = null;
+                return true;
+            } else{
+                return right.remove(val);
+            }
         }
     }
 
@@ -215,9 +237,13 @@ public class AvlTree implements Iterable<Long>
 
     private AvlTree predecessor(){
         AvlTree result = left;
-        while(result.left != null){
-            result = result.left;
+        while(result.right != null){
+            result = result.right;
         }
         return result;
+    }
+    public long getValue()
+    {
+        return value;
     }
 }
