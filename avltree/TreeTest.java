@@ -48,7 +48,6 @@ public class TreeTest
         assertTrue(tree.contains(6));
     }
 
-
     @Test
     public void testRemove(){
         tree.insert(42);
@@ -141,6 +140,4 @@ public class TreeTest
         assertEquals(200, it.next().longValue());
         assertFalse(it.hasNext());
     }
-
-
 }
