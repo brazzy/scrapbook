@@ -3,13 +3,21 @@ package avltree;
 import java.util.Iterator;
 
 /**
- * @author Michael Borgwardt
+ * Implementation of an AVL tree (balanced binary search tree)
+ * NOTE: so far, the AVL auto-balancing is not yet implemented!!
  *
+ * @author Michael Borgwardt
  */
 public class AvlTree implements Iterable<Long>
 {
+    /**
+     * Iterates over the tree's contents
+     *
+     * @author Michael Borgwardt
+     */
     private static class TreeIterator implements Iterator<Long>
     {
+        /** Direction in which to iterate next */
         private static enum Direction{ LEFT, RIGHT, UP};
 
         private TreeIterator(AvlTree node)
@@ -19,9 +27,11 @@ public class AvlTree implements Iterable<Long>
             next();
         }
 
+        /** Current node, contains value that will be returned next. */
         private AvlTree node;
+
+        /** Direction in which to iterate next */
         private Direction dir;
-        private boolean finished;
 
         @Override
         public boolean hasNext()
@@ -82,11 +92,22 @@ public class AvlTree implements Iterable<Long>
 
     }
 
+    /**
+     * Value contained in this node. Can be null, but only at
+     * the root of the empty tree.
+     */
     private Long value;
+
+    /** Left subtree */
     private AvlTree left;
+
+    /** Right subtree */
     private AvlTree right;
+
+    /** Parent node */
     private AvlTree parent;
 
+    /** Creates empty tree */
     public AvlTree(){
         this(null, null);
     }
@@ -121,10 +142,16 @@ public class AvlTree implements Iterable<Long>
         return new TreeIterator(this);
     }
 
-    public boolean isLeaf(){
+    private boolean isLeaf(){
         return left == null && right == null;
     }
 
+    /**
+     * Adds value to tree
+     *
+     * @param val to add
+     * @return true if value was already present
+     */
     public boolean insert(long val){
         if(value == null){
             this.value = val;
@@ -140,6 +167,9 @@ public class AvlTree implements Iterable<Long>
         }
     }
 
+    /**
+     * @return true if val is present in tree
+     */
     public boolean contains(long val){
         return node(val) != null;
     }
@@ -163,8 +193,12 @@ public class AvlTree implements Iterable<Long>
         right = child.right;
     }
 
-    public boolean remove(long val)
-    {
+    /**
+     * Removes value from tree
+     * @param val to remove
+     * @return true if val was present in tree
+     */
+    public boolean remove(long val){
         if(this.value == null){
             return false;
         }
@@ -242,6 +276,7 @@ public class AvlTree implements Iterable<Long>
         }
         return result;
     }
+
     public long getValue()
     {
         return value;
