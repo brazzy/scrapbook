@@ -10,19 +10,26 @@ import java.util.Iterator;
  */
 public class AvlTree implements Iterable<Long>{
 
-    TreeNode root = new TreeNode(null);
+    private TreeNode root = new TreeNode(null);
+
+    private int size;
 
     @Override
     public Iterator<Long> iterator(){
         return root.iterator();
     }
 
+    public int size() {
+        return size;
+    }
+
     public void clear(){
-        root = null;
+        root = new TreeNode(null);
+        size = 0;
     }
 
     public boolean isEmpty(){
-        return root.isEmpty();
+        return size == 0;
     }
 
     /**
@@ -32,7 +39,11 @@ public class AvlTree implements Iterable<Long>{
      * @return true if value was already present
      */
     public boolean insert(long val){
-	return root.insert(val);
+	boolean wasPresent = root.insert(val);
+	if(!wasPresent){
+	    size++;
+	}
+	return wasPresent;
     }
 
     /**
@@ -48,8 +59,11 @@ public class AvlTree implements Iterable<Long>{
      * @return true if val was present in tree
      */
     public boolean remove(long val){
-	return root.remove(val);
-    }
+	boolean wasPresent = root.remove(val);
+	if(wasPresent){
+	    size--;
+	}
+	return wasPresent;    }
 
     @Override
     public String toString() {
@@ -347,4 +361,5 @@ public class AvlTree implements Iterable<Long>{
             throw new UnsupportedOperationException();
         }
     }
+
 }
