@@ -45,34 +45,25 @@ public class AvlTree implements Iterable<Long>
             switch(dir){
             case LEFT:
                 traverseLeft();
-                if(node.right != null){
-                    dir = Direction.RIGHT;
-                } else {
-                    dir = Direction.UP;
-                }
                 break;
             case RIGHT:
-                if(node.right!=null){
-                    node = node.right;
-                    traverseLeft();
-                    dir = Direction.RIGHT;
-                } else {
-                    AvlTree previous;
-                    do{
-                        previous = node;
-                        node = node.parent;
-                    } while (node.parent != null && node.right == previous);
-                    if(node.parent == null && node.right == previous)
-                    {
-                        dir = null;
-                    }else {
-                        dir = Direction.RIGHT;
-                    }
-                }
+                node = node.right;
+                traverseLeft();
                 break;
             case UP:
-                node = node.parent;
-                dir = Direction.LEFT;
+                AvlTree previous;
+                do{
+                    previous = node;
+                    node = node.parent;
+                } while (node.parent != null &&
+                         node.right == previous);
+                if(node.parent == null &&
+                   node.right == previous)
+                {
+                    dir = null;
+                }else {
+                    dir = Direction.RIGHT;
+                }
                 break;
             }
             return result;
@@ -81,6 +72,11 @@ public class AvlTree implements Iterable<Long>
         private void traverseLeft(){
             while(node.left != null){
                 node = node.left;
+            }
+            if(node.right != null){
+                dir = Direction.RIGHT;
+            } else {
+                dir = Direction.UP;
             }
         }
 
