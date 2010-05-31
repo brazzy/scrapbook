@@ -39,6 +39,11 @@ public class TreeTest
         assertFalse(tree.insert(-100));
         assertFalse(tree.insert(8));
         assertFalse(tree.insert(6));
+        assertFalse(tree.insert(-20));
+        assertFalse(tree.insert(100));
+
+        assertTrue(tree.insert(17));
+        assertTrue(tree.insert(-100));
 
         assertTrue(tree.contains(42));
         assertTrue(tree.contains(5));
@@ -46,6 +51,8 @@ public class TreeTest
         assertTrue(tree.contains(-100));
         assertTrue(tree.contains(8));
         assertTrue(tree.contains(6));
+        assertTrue(tree.contains(-20));
+        assertTrue(tree.contains(100));
     }
 
     @Test
@@ -139,5 +146,37 @@ public class TreeTest
         assertTrue(it.hasNext());
         assertEquals(200, it.next().longValue());
         assertFalse(it.hasNext());
+    }
+
+
+    @Test
+    public void testClear(){
+        tree.insert(55);
+        tree.insert(38);
+        tree.clear();
+        assertTrue(tree.isEmpty());
+        assertEquals(0, tree.size());
+        assertFalse(tree.iterator().hasNext());
+    }
+
+    @Test
+    public void testSize(){
+        assertEquals(0, tree.size());
+        tree.insert(55);
+        assertEquals(1, tree.size());
+        tree.insert(38);
+        assertEquals(2, tree.size());
+        tree.insert(-7);
+        assertEquals(3, tree.size());
+        tree.insert(100);
+        assertEquals(4, tree.size());
+        tree.insert(100);
+        assertEquals(4, tree.size());
+        tree.remove(38);
+        assertEquals(3, tree.size());
+        tree.remove(38);
+        assertEquals(3, tree.size());
+        tree.remove(55);
+        assertEquals(2, tree.size());
     }
 }
