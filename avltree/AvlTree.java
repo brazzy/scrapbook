@@ -74,6 +74,10 @@ public class AvlTree implements Iterable<Long>{
             return true;
         }
 
+        public boolean isRoot(){
+            return parent == null;
+        }
+
         public Iterator<Long> iterator(){
             return new Iterator<Long>(){
 		@Override
@@ -93,7 +97,7 @@ public class AvlTree implements Iterable<Long>{
 
         public boolean insert(long val){
             ContentNode newNode = new ContentNode(parent, val);
-            if(parent == null){
+            if(isRoot()){
         	AvlTree.this.root = newNode;
             } else if(parent.left == this){
         	parent.left = newNode;
@@ -195,14 +199,14 @@ public class AvlTree implements Iterable<Long>{
             if(this.value == val){
                 if(isLeaf()){
                     TreeNode empty = new TreeNode(null);
-                    if(parent == null){
+                    if(isRoot()){
                 	AvlTree.this.root = empty;
                     } else {
                         parent.replace(this, empty);
                     }
-                } else if(left == null){
+                } else if(left.isEmpty()){
                     parent.replace(this, right);
-                } else if(right == null){
+                } else if(right.isEmpty()){
                     parent.replace(this, left);
                 } else{
                     ContentNode pre = predecessor();
@@ -217,7 +221,6 @@ public class AvlTree implements Iterable<Long>{
                 return right.remove(val);
             }
         }
-
 
         private ContentNode predecessor(){
             ContentNode result = (ContentNode)left;
@@ -300,9 +303,9 @@ public class AvlTree implements Iterable<Long>{
                 do{
                     previous = node;
                     node = node.parent;
-                } while (node.parent != null &&
+                } while (!node.isRoot() &&
                          node.right == previous);
-                if(node.parent == null &&
+                if(node.isRoot() &&
                    node.right == previous)
                 {
                     dir = null;
