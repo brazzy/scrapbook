@@ -53,7 +53,9 @@ public class AvlTree implements Iterable<Long>{
 
     @Override
     public String toString() {
-	return root.toString();
+	StringBuilder b = new StringBuilder();
+	root.toString("", b);
+	return b.toString();
     }
 
     /**
@@ -63,10 +65,10 @@ public class AvlTree implements Iterable<Long>{
      */
     private class TreeNode{
         /** Parent node */
-        protected ContentNode parent;
+        protected TreeNode parent;
 
         /** Creates empty tree */
-        public TreeNode(ContentNode parent){
+        public TreeNode(TreeNode parent){
             this.parent = parent;
         }
 
@@ -95,14 +97,16 @@ public class AvlTree implements Iterable<Long>{
             };
         }
 
+        protected void replace(TreeNode child, TreeNode replacement){
+            throw new UnsupportedOperationException();
+        }
+
         public boolean insert(long val){
             ContentNode newNode = new ContentNode(parent, val);
             if(isRoot()){
         	AvlTree.this.root = newNode;
-            } else if(parent.left == this){
-        	parent.left = newNode;
             } else{
-        	parent.right = newNode;
+        	parent.replace(this, newNode);
             }
             return false;
         }
@@ -113,6 +117,18 @@ public class AvlTree implements Iterable<Long>{
 
         public boolean remove(long val){
             return false;
+        }
+
+        protected void toString(String prefix, StringBuilder buf){
+            throw new UnsupportedOperationException();
+        }
+
+        public long getValue(){
+            throw new UnsupportedOperationException();
+        }
+
+        protected TreeNode rightmost(){
+            return this.parent;
         }
     }
 
@@ -133,7 +149,7 @@ public class AvlTree implements Iterable<Long>{
         /** Right subtree */
         private TreeNode right;
 
-        private ContentNode(ContentNode parent, Long value){
+        private ContentNode(TreeNode parent, Long value){
             super(parent);
             this.value = value;
             this.left = new TreeNode(this);
@@ -181,7 +197,8 @@ public class AvlTree implements Iterable<Long>{
             }
         }
 
-        private void replace(TreeNode child, TreeNode replacement){
+        @Override
+	protected void replace(TreeNode child, TreeNode replacement){
             replacement.parent = this;
             if(child == left){
         	left = replacement;
@@ -209,8 +226,8 @@ public class AvlTree implements Iterable<Long>{
                 } else if(right.isEmpty()){
                     parent.replace(this, left);
                 } else{
-                    ContentNode pre = predecessor();
-                    Long preVal = pre.value;
+                    TreeNode pre = left.rightmost();
+                    Long preVal = pre.getValue();
                     pre.remove(preVal);
                     this.value = preVal;
                 }
@@ -222,21 +239,19 @@ public class AvlTree implements Iterable<Long>{
             }
         }
 
-        private ContentNode predecessor(){
-            ContentNode result = (ContentNode)left;
-            while(!result.right.isEmpty()){
-                result = (ContentNode)result.right;
-            }
-            return result;
+
+        @Override
+	public long getValue(){
+            return this.value;
         }
 
         @Override
-        public String toString(){
-            return toString("");
+	protected TreeNode rightmost(){
+            return right.rightmost();
         }
 
-        private String toString(String prefix){
-            StringBuffer buf = new StringBuffer();
+        @Override
+	protected void toString(String prefix, StringBuilder buf){
             buf.append('(');
             buf.append(value);
             buf.append(')');
@@ -247,18 +262,17 @@ public class AvlTree implements Iterable<Long>{
                 buf.append("|-");
                 if(left.isEmpty())
                 {
-                    buf.append(((ContentNode)right).toString(prefix+"   "));
+                    right.toString(prefix+"   ", buf);
                 } else {
-                    buf.append(((ContentNode)right).toString(prefix+"|  "));
+                    right.toString(prefix+"|  ", buf);
                 }
             }
             if(!left.isEmpty())
             {
                 buf.append(prefix);
                 buf.append("|-");
-                buf.append(((ContentNode)left).toString(prefix+"   "));
+                left.toString(prefix+"   ", buf);
             }
-            return buf.toString();
         }
     }
 
@@ -302,7 +316,7 @@ public class AvlTree implements Iterable<Long>{
                 ContentNode previous;
                 do{
                     previous = node;
-                    node = node.parent;
+                    node = (ContentNode)node.parent;
                 } while (!node.isRoot() &&
                          node.right == previous);
                 if(node.isRoot() &&
