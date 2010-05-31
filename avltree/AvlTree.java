@@ -167,18 +167,14 @@ public class AvlTree implements Iterable<Long>
      * @return true if val is present in tree
      */
     public boolean contains(long val){
-        return node(val) != null;
-    }
-
-    private AvlTree node(long val){
         if(value == null){
-            return null;
+            return false;
         } else if(this.value == val){
-            return this;
+            return true;
         } else if (val < this.value) {
-            return left == null ? null : left.node(val);
+            return left == null ? false : left.contains(val);
         } else {
-            return right == null ? null : right.node(val);
+            return right == null ? false : right.contains(val);
         }
     }
 
