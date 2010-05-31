@@ -8,20 +8,17 @@ import java.util.Iterator;
  *
  * @author Michael Borgwardt
  */
-public class AvlTree implements Iterable<Long>
-{
+public class AvlTree implements Iterable<Long>{
     /**
      * Iterates over the tree's contents
      *
      * @author Michael Borgwardt
      */
-    private static class TreeIterator implements Iterator<Long>
-    {
+    private static class TreeIterator implements Iterator<Long>{
         /** Direction in which to iterate next */
         private static enum Direction{ LEFT, RIGHT, UP};
 
-        private TreeIterator(AvlTree node)
-        {
+        private TreeIterator(AvlTree node){
             this.node = node;
             this.dir = Direction.LEFT;
             next();
@@ -34,13 +31,11 @@ public class AvlTree implements Iterable<Long>
         private Direction dir;
 
         @Override
-        public boolean hasNext()
-        {
+        public boolean hasNext(){
             return node.value != null && dir != null;
         }
         @Override
-        public Long next()
-        {
+        public Long next(){
             Long result = node.value;
             switch(dir){
             case LEFT:
@@ -81,8 +76,7 @@ public class AvlTree implements Iterable<Long>
         }
 
         @Override
-        public void remove()
-        {
+        public void remove(){
             throw new UnsupportedOperationException();
         }
 
@@ -269,8 +263,7 @@ public class AvlTree implements Iterable<Long>
         return result;
     }
 
-    public long getValue()
-    {
+    public long getValue(){
         return value;
     }
 }
