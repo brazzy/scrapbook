@@ -1,18 +1,20 @@
 package avltree;
 
-public class NodeTwoChildren extends InnerNode{
-	TreeNode left;
-	TreeNode right;
+class NodeTwoChildren extends InnerNode{
+	private TreeNode left;
+	private TreeNode right;
 	
-	public NodeTwoChildren(InnerNode parent, long val) {
+	public NodeTwoChildren(InnerNode parent, TreeNode right, TreeNode left, long val) {
 		super(parent, val);
+		this.right = right;
+		this.left = left;
 	}
 
 	@Override
 	public boolean insert(long val) {
-    	if(this.value == val) {
+    	if(this.getValue() == val) {
     		return true;
-    	} else if (val < this.value) {
+    	} else if (val < this.getValue()) {
     		return left.insert(val);
     	} else {
     		return right.insert(val);
@@ -21,19 +23,41 @@ public class NodeTwoChildren extends InnerNode{
 
 	@Override
 	public boolean remove(long val) {
-		// TODO Auto-generated method stub
-		return false;
+    	if(this.getValue() == val) {
+            TreeNode pre = left.rightmost();
+            Long preVal = pre.getValue();
+            pre.remove(preVal);
+            setValue(preVal);
+            return true;
+    	} else if (val < this.getValue()) {
+    		return left.remove(val);
+    	} else {
+    		return right.remove(val);
+    	}
 	}
 
 	@Override
 	protected void removeChild(TreeNode child) {
-		// TODO Auto-generated method stub
+		if(child == left){
+			NodeRightChild n = new NodeRightChild(getParent(), this.right, getValue());
+			getParent().replaceChild(this, n);
+		} else if(child == right) {
+			NodeLeftChild n = new NodeLeftChild(getParent(), this.left, getValue());
+			getParent().replaceChild(this, n);
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
 	protected void replaceChild(TreeNode child, TreeNode replacement) {
-		// TODO Auto-generated method stub
-		
+		if(child == left){
+			left = child;
+		} else if(child == right) {
+			right = child;
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override
@@ -42,4 +66,8 @@ public class NodeTwoChildren extends InnerNode{
 		
 	}
 
+	@Override
+	public TreeNode rightmost() {
+		return right.rightmost();
+	}
 }

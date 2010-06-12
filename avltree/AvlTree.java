@@ -10,8 +10,7 @@ import java.util.Iterator;
  */
 public class AvlTree implements Iterable<Long>{
 
-    private TreeNode root = new TreeNode(null);
-
+    private TreeNode root;
     private int size;
 
     @Override
@@ -24,7 +23,7 @@ public class AvlTree implements Iterable<Long>{
     }
 
     public void clear(){
-        root = new TreeNode(null);
+        root = null;
         size = 0;
     }
 
@@ -39,18 +38,18 @@ public class AvlTree implements Iterable<Long>{
      * @return true if value was already present
      */
     public boolean insert(long val){
-	boolean wasPresent = root.insert(val);
-	if(!wasPresent){
-	    size++;
-	}
-	return wasPresent;
+		boolean wasPresent = root.insert(val);
+		if(!wasPresent){
+		    size++;
+		}
+		return wasPresent;
     }
 
     /**
      * @return true if val is present in tree
      */
     public boolean contains(long val){
-	return root.contains(val);
+    	return root.contains(val);
     }
 
     /**
@@ -59,235 +58,18 @@ public class AvlTree implements Iterable<Long>{
      * @return true if val was present in tree
      */
     public boolean remove(long val){
-	boolean wasPresent = root.remove(val);
-	if(wasPresent){
-	    size--;
-	}
-	return wasPresent;    }
+		boolean wasPresent = root.remove(val);
+		if(wasPresent){
+		    size--;
+		}
+		return wasPresent;    
+    }
 
     @Override
     public String toString() {
-	StringBuilder b = new StringBuilder();
-	root.toString("", b);
-	return b.toString();
-    }
-
-    /**
-     * Basic (empty) node
-     *
-     * @author Michael Borgwardt
-     */
-    private class TreeNode{
-        /** Parent node */
-        protected TreeNode parent;
-
-        /** Creates empty tree */
-        public TreeNode(TreeNode parent){
-            this.parent = parent;
-        }
-
-        public boolean isEmpty(){
-            return true;
-        }
-
-        public boolean isRoot(){
-            return parent == null;
-        }
-
-        public Iterator<Long> iterator(){
-            return new Iterator<Long>(){
-		@Override
-		public boolean hasNext() {
-		    return false;
-		}
-		@Override
-		public Long next() {
-		    throw new UnsupportedOperationException();
-		}
-		@Override
-		public void remove() {
-		    throw new UnsupportedOperationException();
-		}
-            };
-        }
-
-        protected void replace(TreeNode child, TreeNode replacement){
-            throw new UnsupportedOperationException();
-        }
-
-        public boolean insert(long val){
-            ContentNode newNode = new ContentNode(parent, val);
-            if(isRoot()){
-        	AvlTree.this.root = newNode;
-            } else{
-        	parent.replace(this, newNode);
-            }
-            return false;
-        }
-
-        public boolean contains(long val){
-            return false;
-        }
-
-        public boolean remove(long val){
-            return false;
-        }
-
-        protected void toString(String prefix, StringBuilder buf){
-            throw new UnsupportedOperationException();
-        }
-
-        public long getValue(){
-            throw new UnsupportedOperationException();
-        }
-
-        protected TreeNode rightmost(){
-            return this.parent;
-        }
-    }
-
-    /**
-     * Node with content.
-     *
-     * @author Michael Borgwardt
-     */
-    private class ContentNode extends TreeNode{
-        /**
-         * Value contained in this node.
-         */
-        private Long value;
-
-        /** Left subtree */
-        private TreeNode left;
-
-        /** Right subtree */
-        private TreeNode right;
-
-        private ContentNode(TreeNode parent, Long value){
-            super(parent);
-            this.value = value;
-            this.left = new TreeNode(this);
-            this.right = new TreeNode(this);
-        }
-
-        @Override
-        public boolean isEmpty(){
-            return value == null;
-        }
-
-        @Override
-        public Iterator<Long> iterator(){
-            return new TreeIterator(this);
-        }
-
-        private boolean isLeaf(){
-            return left.isEmpty() && right.isEmpty();
-        }
-
-        @Override
-        public boolean insert(long val){
-            if(value == null){
-                this.value = val;
-                return false;
-            } else if(this.value == val){
-                return true;
-            } else if(val < this.value){
-                return left.insert(val);
-            } else {
-                return right.insert(val);
-            }
-        }
-
-        @Override
-        public boolean contains(long val){
-            if(value == null){
-                return false;
-            } else if(this.value == val){
-                return true;
-            } else if (val < this.value) {
-                return left.contains(val);
-            } else {
-                return right.contains(val);
-            }
-        }
-
-        @Override
-	protected void replace(TreeNode child, TreeNode replacement){
-            replacement.parent = this;
-            if(child == left){
-        	left = replacement;
-            } else {
-        	right = replacement;
-            }
-        }
-
-        @Override
-        public boolean remove(long val){
-            if(this.value == null){
-                return false;
-            }
-
-            if(this.value == val){
-                if(isLeaf()){
-                    TreeNode empty = new TreeNode(null);
-                    if(isRoot()){
-                	AvlTree.this.root = empty;
-                    } else {
-                        parent.replace(this, empty);
-                    }
-                } else if(left.isEmpty()){
-                    parent.replace(this, right);
-                } else if(right.isEmpty()){
-                    parent.replace(this, left);
-                } else{
-                    TreeNode pre = left.rightmost();
-                    Long preVal = pre.getValue();
-                    pre.remove(preVal);
-                    this.value = preVal;
-                }
-                return true;
-            } else if (val < this.value) {
-                return left.remove(val);
-            } else {
-                return right.remove(val);
-            }
-        }
-
-
-        @Override
-	public long getValue(){
-            return this.value;
-        }
-
-        @Override
-	protected TreeNode rightmost(){
-            return right.rightmost();
-        }
-
-        @Override
-	protected void toString(String prefix, StringBuilder buf){
-            buf.append('(');
-            buf.append(value);
-            buf.append(')');
-            buf.append('\n');
-            if(!right.isEmpty())
-            {
-                buf.append(prefix);
-                buf.append("|-");
-                if(left.isEmpty())
-                {
-                    right.toString(prefix+"   ", buf);
-                } else {
-                    right.toString(prefix+"|  ", buf);
-                }
-            }
-            if(!left.isEmpty())
-            {
-                buf.append(prefix);
-                buf.append("|-");
-                left.toString(prefix+"   ", buf);
-            }
-        }
+		StringBuilder b = new StringBuilder();
+		root.toString("", b);
+		return b.toString();
     }
 
     /**

@@ -1,6 +1,6 @@
 package avltree;
 
-public class LeafNode extends TreeNode{
+class LeafNode extends TreeNode{
     /** Creates empty tree */
     public LeafNode(InnerNode parent, long val){
     	super(parent, val);
@@ -9,31 +9,23 @@ public class LeafNode extends TreeNode{
     @Override
     public boolean insert(long val){
     	InnerNode replacement;
-    	if(this.value == val) {
+    	if(this.getValue() == val) {
     		return true;
-    	} else if (val < this.value) {
-    		replacement = new NodeLeftChild(this.parent, this, this.value);
-    		this.value = val;
+    	} else if (val < this.getValue()) {
+    		replacement = new NodeLeftChild(this.getParent(), this, this.getValue());
+    		this.setValue(val);
     	} else {
-    		replacement = new NodeRightChild(this.parent, this, this.value);
-    		this.value = val;		
+    		replacement = new NodeRightChild(this.getParent(), this, this.getValue());
+    		this.setValue(val);		
     	}
-        if(isRoot()){
-        	//TODO;
-        } else{
-        	parent.replaceChild(this, replacement);
-        }
+    	getParent().replaceChild(this, replacement);
         return false;
     }
 
     @Override
     public boolean remove(long val){
-    	if(val==this.value){
-            if(isRoot()){
-            	//TODO;            	
-            } else {
-        		parent.removeChild(this);
-            }
+    	if(val==this.getValue()){
+    		getParent().removeChild(this);
     		return true;            	
     	}else {
     		return false;
@@ -42,7 +34,7 @@ public class LeafNode extends TreeNode{
 
 	@Override
     protected void toString(String prefix, StringBuilder buf){
-        throw new UnsupportedOperationException();
+        // TODO
     }
 
 	@Override
@@ -54,4 +46,9 @@ public class LeafNode extends TreeNode{
     protected void replaceChild(TreeNode child, TreeNode replacement){
         throw new UnsupportedOperationException();
     }
+
+	@Override
+	public TreeNode rightmost() {
+		return this;
+	}
 }

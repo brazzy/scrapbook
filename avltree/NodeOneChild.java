@@ -1,7 +1,7 @@
 package avltree;
 
-public abstract class NodeOneChild  extends InnerNode{
-	TreeNode child;
+abstract class NodeOneChild  extends InnerNode{
+	protected TreeNode child;
 
 	public NodeOneChild(InnerNode parent, TreeNode child, long val) {
 		super(parent, val);
@@ -10,7 +10,8 @@ public abstract class NodeOneChild  extends InnerNode{
 
 	@Override
 	protected void removeChild(TreeNode child) {
-		// TODO Auto-generated method stub
+		LeafNode n = new LeafNode(this.getParent(), this.getValue());
+		getParent().replaceChild(this, n);
 	}
 
 	@Override
