@@ -22,7 +22,9 @@ public class TreeTest
 
     @Test
     public void testAdd(){
+    	tree.check();
         assertFalse(tree.insert(42));
+    	tree.check();
         assertTrue(tree.contains(42));
         assertFalse(tree.contains(66));
         assertFalse(tree.isEmpty());
@@ -33,17 +35,28 @@ public class TreeTest
 
     @Test
     public void testAddMultiple(){
+    	tree.check();
         assertFalse(tree.insert(42));
+    	tree.check();
         assertFalse(tree.insert(5));
+    	tree.check();
         assertFalse(tree.insert(17));
+    	tree.check();
         assertFalse(tree.insert(-100));
+    	tree.check();
         assertFalse(tree.insert(8));
+    	tree.check();
         assertFalse(tree.insert(6));
+    	tree.check();
         assertFalse(tree.insert(-20));
+    	tree.check();
         assertFalse(tree.insert(100));
+    	tree.check();
 
         assertTrue(tree.insert(17));
+    	tree.check();
         assertTrue(tree.insert(-100));
+    	tree.check();
 
         assertTrue(tree.contains(42));
         assertTrue(tree.contains(5));
@@ -58,9 +71,12 @@ public class TreeTest
     @Test
     public void testRemove(){
         tree.insert(42);
+    	tree.check();
         assertTrue(tree.remove(42));
+    	tree.check();
         assertTrue(tree.isEmpty());
         assertFalse(tree.remove(42));
+    	tree.check();
         assertFalse(tree.contains(42));
         assertTrue(tree.isEmpty());
     }
@@ -73,33 +89,40 @@ public class TreeTest
         tree.insert(0);
         tree.insert(-17);
         tree.insert(38);
+    	tree.check();
 
         assertTrue(tree.remove(42));
+    	tree.check();
         assertFalse(tree.contains(42));
         assertFalse(tree.remove(42));
         assertTrue(tree.contains(-1));
 
         assertTrue(tree.remove(-1));
+    	tree.check();
         assertFalse(tree.contains(-1));
         assertFalse(tree.remove(-1));
         assertTrue(tree.contains(100));
 
         assertTrue(tree.remove(100));
+    	tree.check();
         assertFalse(tree.contains(100));
         assertFalse(tree.remove(100));
         assertTrue(tree.contains(0));
 
         assertTrue(tree.remove(0));
+    	tree.check();
         assertFalse(tree.contains(0));
         assertFalse(tree.remove(0));
         assertTrue(tree.contains(-17));
 
         assertTrue(tree.remove(-17));
+    	tree.check();
         assertFalse(tree.contains(-17));
         assertFalse(tree.remove(-17));
         assertTrue(tree.contains(38));
 
         assertTrue(tree.remove(38));
+    	tree.check();
         assertFalse(tree.contains(38));
         assertFalse(tree.remove(38));
 
@@ -122,10 +145,8 @@ public class TreeTest
         tree.insert(200);
         System.out.println(tree);
         tree.insert(-17);
-        System.out.println(tree);
         tree.insert(55);
         tree.insert(38);
-        System.out.println(tree);
         Iterator<Long> it = tree.iterator();
         assertTrue(it.hasNext());
         assertEquals(-100, it.next().longValue());

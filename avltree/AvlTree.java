@@ -8,7 +8,7 @@ import java.util.Iterator;
  *
  * @author Michael Borgwardt
  */
-public class AvlTree implements Iterable<Long>{
+public class AvlTree implements Iterable<Long>, TreeParent{
 
     private TreeNode root;
     private int size;
@@ -38,17 +38,26 @@ public class AvlTree implements Iterable<Long>{
      * @return true if value was already present
      */
     public boolean insert(long val){
-		boolean wasPresent = root.insert(val);
-		if(!wasPresent){
-		    size++;
-		}
-		return wasPresent;
+    	if(root == null){
+    		root = new LeafNode(this, val);
+    		size++;
+    		return false;
+    	} else {
+    		boolean wasPresent = root.insert(val);
+    		if(!wasPresent){
+    		    size++;
+    		}
+    		return wasPresent;    		
+    	}
     }
 
     /**
      * @return true if val is present in tree
      */
     public boolean contains(long val){
+    	if(root==null){
+    		return false;
+    	}
     	return root.contains(val);
     }
 
@@ -58,6 +67,9 @@ public class AvlTree implements Iterable<Long>{
      * @return true if val was present in tree
      */
     public boolean remove(long val){
+    	if(root==null){
+    		return false;
+    	}
 		boolean wasPresent = root.remove(val);
 		if(wasPresent){
 		    size--;
@@ -67,11 +79,20 @@ public class AvlTree implements Iterable<Long>{
 
     @Override
     public String toString() {
+    	if(root==null){
+    		return "Empty";
+    	}
 		StringBuilder b = new StringBuilder();
 		root.toString("", b);
 		return b.toString();
     }
 
+    void check(){
+    	if(!isEmpty()){
+    		root.check(this);    		
+    	}
+    }
+	
     /**
      * Iterates over the tree's contents
      *
@@ -81,14 +102,14 @@ public class AvlTree implements Iterable<Long>{
         /** Direction in which to iterate next */
         private static enum Direction{ LEFT, RIGHT, UP};
 
-        private TreeIterator(ContentNode node){
-            this.node = node;
+        private TreeIterator(TreeNode root){
+            this.node = root;
             this.dir = Direction.LEFT;
             next();
         }
 
         /** Current node, contains value that will be returned next. */
-        private ContentNode node;
+        private TreeNode node;
 
         /** Direction in which to iterate next */
         private Direction dir;
@@ -143,5 +164,21 @@ public class AvlTree implements Iterable<Long>{
             throw new UnsupportedOperationException();
         }
     }
+
+	@Override
+	public void removeChild(TreeNode child) {
+		if(root != child){
+			throw new IllegalArgumentException();			
+		}
+		root = null;
+	}
+
+	@Override
+	public void replaceChild(TreeNode child, TreeNode replacement) {
+		if(root != child){
+			throw new IllegalArgumentException();			
+		}
+		root = replacement;
+	}
 
 }

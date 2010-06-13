@@ -4,11 +4,22 @@ class NodeTwoChildren extends InnerNode{
 	private TreeNode left;
 	private TreeNode right;
 	
-	public NodeTwoChildren(InnerNode parent, TreeNode right, TreeNode left, long val) {
+	public NodeTwoChildren(TreeParent parent, TreeNode right, TreeNode left, long val) {
 		super(parent, val);
 		this.right = right;
 		this.left = left;
 	}
+
+	@Override
+    public boolean contains(long val){
+        if(val==getValue()){
+        	return true;
+        } else if(val < getValue()){
+        	return left.contains(val);
+        } else {
+        	return right.contains(val);
+        }
+    }
 
 	@Override
 	public boolean insert(long val) {
@@ -37,7 +48,7 @@ class NodeTwoChildren extends InnerNode{
 	}
 
 	@Override
-	protected void removeChild(TreeNode child) {
+	public void removeChild(TreeNode child) {
 		if(child == left){
 			NodeRightChild n = new NodeRightChild(getParent(), this.right, getValue());
 			getParent().replaceChild(this, n);
@@ -50,11 +61,11 @@ class NodeTwoChildren extends InnerNode{
 	}
 
 	@Override
-	protected void replaceChild(TreeNode child, TreeNode replacement) {
+	public void replaceChild(TreeNode child, TreeNode replacement) {
 		if(child == left){
-			left = child;
+			left = replacement;
 		} else if(child == right) {
-			right = child;
+			right = replacement;
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -62,9 +73,19 @@ class NodeTwoChildren extends InnerNode{
 
 	@Override
 	protected void toString(String prefix, StringBuilder buf) {
-		// TODO Auto-generated method stub
-		
+		super.toString(prefix, buf);
+        right.toString(prefix+"  |", buf);
+        left.toString(prefix+"   ", buf);
 	}
+
+	@Override
+    void check(TreeParent parent){
+		super.check(parent);
+		assert getValue() < right.getValue();
+		assert getValue() > left.getValue();
+		right.check(this);
+		left.check(this);
+    }
 
 	@Override
 	public TreeNode rightmost() {

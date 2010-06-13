@@ -1,32 +1,31 @@
 package avltree;
 
-abstract class NodeOneChild  extends InnerNode{
+abstract class NodeOneChild extends InnerNode implements TreeParent{
 	protected TreeNode child;
 
-	public NodeOneChild(InnerNode parent, TreeNode child, long val) {
+	public NodeOneChild(TreeParent parent, TreeNode child, long val) {
 		super(parent, val);
 		this.child = child;
 	}
 
 	@Override
-	protected void removeChild(TreeNode child) {
+	public void removeChild(TreeNode child) {
 		LeafNode n = new LeafNode(this.getParent(), this.getValue());
 		getParent().replaceChild(this, n);
 	}
 
 	@Override
-	protected void replaceChild(TreeNode child, TreeNode replacement) {
+	public void replaceChild(TreeNode child, TreeNode replacement) {
 		if(this.child != child){
 			throw new IllegalStateException();
 		} else {
 			this.child = replacement;
 		}
 	}
-
+	
 	@Override
-	protected void toString(String prefix, StringBuilder buf) {
-		// TODO Auto-generated method stub
-		
-	}
-
+    void check(TreeParent parent){
+		super.check(parent);
+		child.check(this);
+    }
 }
