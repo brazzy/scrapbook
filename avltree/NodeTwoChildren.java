@@ -36,9 +36,9 @@ class NodeTwoChildren extends InnerNode{
 	public boolean remove(long val) {
     	if(this.getValue() == val) {
             TreeNode pre = left.rightmost();
-            Long preVal = pre.getValue();
-            pre.remove(preVal);
+            long preVal = pre.getValue();
             setValue(preVal);
+            pre.remove(preVal);
             return true;
     	} else if (val < this.getValue()) {
     		return left.remove(val);
@@ -51,9 +51,11 @@ class NodeTwoChildren extends InnerNode{
 	public void removeChild(TreeNode child) {
 		if(child == left){
 			NodeRightChild n = new NodeRightChild(getParent(), this.right, getValue());
+			this.right.setParent(n);
 			getParent().replaceChild(this, n);
 		} else if(child == right) {
 			NodeLeftChild n = new NodeLeftChild(getParent(), this.left, getValue());
+			this.left.setParent(n);
 			getParent().replaceChild(this, n);
 		} else {
 			throw new IllegalArgumentException();

@@ -24,7 +24,7 @@ abstract class TreeNode {
     abstract public boolean remove(long val);
 
     void check(TreeParent parent){
-    	assert this.parent == parent;
+    	assert this.parent == parent : "Wrong parent for "+getValue();
     }
 
 	protected TreeParent getParent() {
