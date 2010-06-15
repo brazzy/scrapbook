@@ -93,4 +93,28 @@ class NodeTwoChildren extends InnerNode{
 	public TreeNode rightmost() {
 		return right.rightmost();
 	}
+	@Override
+	public TreeNode leftmost() {
+		return left.leftmost();
+	}
+	@Override
+    void next(TreeWalk walk){		
+		if(walk.getPrevious() == getParent()){
+			TreeNode n = leftmost();
+			walk.setCurrent(n);
+			walk.setPrevious(n.getParent());
+		} else if(walk.getPrevious() == left){
+			walk.setCurrent(this);
+			walk.setPrevious(this);
+		} else if(walk.getPrevious() == this){			
+			TreeNode n = right.leftmost();
+			walk.setCurrent(n);
+			walk.setPrevious(n.getParent());
+		} else if( walk.getPrevious() == right){
+            super.next(walk);
+		} else {
+			throw new IllegalStateException();
+		}
+		
+	}
 }

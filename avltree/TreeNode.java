@@ -18,6 +18,16 @@ abstract class TreeNode {
     }
 
     abstract public TreeNode rightmost();
+    abstract public TreeNode leftmost();
+    void next(TreeWalk walk){
+        TreeParent p = getParent();
+        walk.setPrevious(this);
+        if(p instanceof TreeNode){
+			((TreeNode) p).next(walk);
+        } else {
+        	walk.setCurrent(null);
+        }
+    }
 
     abstract public boolean insert(long val);
 

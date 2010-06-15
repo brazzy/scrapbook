@@ -2,7 +2,13 @@ package avltree;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -135,7 +141,55 @@ public class TreeTest
     }
 
     @Test
-    public void testIterate(){
+    public void testIterateLeaf(){
+        tree.insert(42);
+        Iterator<Long> it = tree.iterator();
+        assertTrue(it.hasNext());
+        assertEquals(42, it.next().longValue());
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testIterateLeftChild(){
+        tree.insert(42);
+        tree.insert(1);
+        Iterator<Long> it = tree.iterator();
+        assertTrue(it.hasNext());
+        assertEquals(1, it.next().longValue());
+        assertTrue(it.hasNext());
+        assertEquals(42, it.next().longValue());
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testIterateRightChild(){
+        tree.insert(42);
+        tree.insert(100);
+        Iterator<Long> it = tree.iterator();
+        assertTrue(it.hasNext());
+        assertEquals(42, it.next().longValue());
+        assertTrue(it.hasNext());
+        assertEquals(100, it.next().longValue());
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testIterateTwoChildren(){
+        tree.insert(42);
+        tree.insert(1);
+        tree.insert(100);
+        Iterator<Long> it = tree.iterator();
+        assertTrue(it.hasNext());
+        assertEquals(1, it.next().longValue());
+        assertTrue(it.hasNext());
+        assertEquals(42, it.next().longValue());
+        assertTrue(it.hasNext());
+        assertEquals(100, it.next().longValue());
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testIterateBig(){
         tree.insert(42);
         tree.insert(0);
         tree.insert(-100);
@@ -143,7 +197,6 @@ public class TreeTest
         tree.insert(42);
         tree.insert(1);
         tree.insert(200);
-        System.out.println(tree);
         tree.insert(-17);
         tree.insert(55);
         tree.insert(38);
@@ -184,20 +237,62 @@ public class TreeTest
     public void testSize(){
         assertEquals(0, tree.size());
         tree.insert(55);
+        tree.check();
         assertEquals(1, tree.size());
         tree.insert(38);
+        tree.check();
         assertEquals(2, tree.size());
         tree.insert(-7);
+        tree.check();
         assertEquals(3, tree.size());
         tree.insert(100);
+        tree.check();
         assertEquals(4, tree.size());
         tree.insert(100);
+        tree.check();
         assertEquals(4, tree.size());
         tree.remove(38);
+        tree.check();
         assertEquals(3, tree.size());
         tree.remove(38);
+        tree.check();
         assertEquals(3, tree.size());
         tree.remove(55);
+        tree.check();
         assertEquals(2, tree.size());
+    }
+    
+    @Test
+    public void testRandomList(){
+    	Random rnd = new Random(424242);
+    	Set<Long> set = new TreeSet<Long>();
+    	for(int i=0; i<5000; i++){
+    		set.add(rnd.nextLong());
+    	}
+    	List<Long> list = new ArrayList<Long>(set);    	
+    	Collections.shuffle(list, rnd);    	
+    	
+    	for(int i=0; i<list.size(); i++){
+    		assertEquals("Wrong size, expected: "+i, i, tree.size());
+    		assertFalse("Already present: "+list.get(i), tree.insert(list.get(i)));
+    		assertTrue("Not found: "+list.get(i), tree.contains(list.get(i)));
+            tree.check();
+    	}
+    	
+    	Iterator<Long> it = tree.iterator();
+    	for(long l : set){
+    		assertTrue(it.hasNext());
+    		assertEquals("Wrong iteration: "+l, l, it.next().longValue());
+    	}
+		assertFalse(it.hasNext());
+    	
+    	Collections.shuffle(list, rnd);
+
+    	for(int i=list.size()-1; i>=0; i--){
+    		assertEquals("Wrong size, expected: "+(i+1), i+1, tree.size());
+    		assertTrue("Already gone: "+list.get(i), tree.remove(list.get(i)));
+    		assertFalse("Still found: "+list.get(i), tree.contains(list.get(i)));
+            tree.check();
+    	}
     }
 }

@@ -15,7 +15,7 @@ public class AvlTree implements Iterable<Long>, TreeParent{
 
     @Override
     public Iterator<Long> iterator(){
-        return root.iterator();
+        return new TreeIterator(root);
     }
 
     public int size() {
@@ -98,71 +98,44 @@ public class AvlTree implements Iterable<Long>, TreeParent{
      *
      * @author Michael Borgwardt
      */
-    private static class TreeIterator implements Iterator<Long>{
-        /** Direction in which to iterate next */
-        private static enum Direction{ LEFT, RIGHT, UP};
-
+    private static class TreeIterator implements Iterator<Long>, TreeWalk{
         private TreeIterator(TreeNode root){
-            this.node = root;
-            this.dir = Direction.LEFT;
-            next();
+        	if(root != null){
+                this.current = root.leftmost();
+            	this.previous = this.current.getParent();
+        	}
         }
 
         /** Current node, contains value that will be returned next. */
-        private TreeNode node;
+        private TreeNode current;
 
-        /** Direction in which to iterate next */
-        private Direction dir;
+        /** Previous node, used for naviation */
+        private Object previous;
 
         @Override
         public boolean hasNext(){
-            return node.value != null && dir != null;
+            return current != null;
         }
         @Override
         public Long next(){
-            Long result = node.value;
-            switch(dir){
-            case LEFT:
-                traverseLeft();
-                break;
-            case RIGHT:
-                node = (ContentNode)node.right;
-                traverseLeft();
-                break;
-            case UP:
-                ContentNode previous;
-                do{
-                    previous = node;
-                    node = (ContentNode)node.parent;
-                } while (!node.isRoot() &&
-                         node.right == previous);
-                if(node.isRoot() &&
-                   node.right == previous)
-                {
-                    dir = null;
-                }else {
-                    dir = Direction.RIGHT;
-                }
-                break;
-            }
-            return result;
-        }
-
-        private void traverseLeft(){
-            while(!node.left.isEmpty()){
-                node = (ContentNode)node.left;
-            }
-            if(!node.right.isEmpty()){
-                dir = Direction.RIGHT;
-            } else {
-                dir = Direction.UP;
-            }
+        	long result = current.getValue();
+        	current.next(this);
+        	return result;
         }
 
         @Override
         public void remove(){
             throw new UnsupportedOperationException();
         }
+		public Object getPrevious() {
+			return previous;
+		}
+		public void setPrevious(Object previous) {
+			this.previous = previous;
+		}
+		public void setCurrent(TreeNode current) {
+			this.current = current;
+		}
     }
 
 	@Override

@@ -36,4 +36,19 @@ class LeafNode extends TreeNode{
 	public TreeNode rightmost() {
 		return this;
 	}
+	@Override
+	public TreeNode leftmost() {
+		return this;
+	}
+
+	@Override
+    void next(TreeWalk walk){		
+		if(walk.getPrevious() == getParent()){
+            super.next(walk);
+		} else if (walk.getPrevious() instanceof TreeNode){
+			throw new IllegalStateException();
+		} else {
+			walk.setCurrent(null);
+		}
+	}
 }

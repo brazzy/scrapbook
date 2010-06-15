@@ -37,6 +37,7 @@ class NodeRightChild extends NodeOneChild{
 	public boolean remove(long val) {
 		if(this.getValue() == val){
 			getParent().replaceChild(this, child);
+			child.setParent(getParent());
 			return true;
 		} else if(val > this.getValue()) {
 			return child.remove(val);
@@ -61,5 +62,9 @@ class NodeRightChild extends NodeOneChild{
 	@Override
 	public TreeNode rightmost() {
 		return child.rightmost();
+	}
+	@Override
+	public TreeNode leftmost() {
+		return this;
 	}
 }
