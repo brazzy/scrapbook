@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * Efficient implementation of an in-place quicksort. Probably a bit more
- * complex that necessary, but not as much as it seems. In-place quicksort with
+ * complex than necessary, but not as much as it seems. In-place quicksort with
  * proper handling of pivot element (not fixed, possibly multiple occurrences)
  * is not easy!
  * 
@@ -25,7 +25,7 @@ public class QuickSort {
     }
 
     /**
-     * Performa in-place quicksort (ascending order) of the array.
+     * Perform in-place quicksort (ascending order) of the array.
      */
     public void quicksort(int[] array) {
         if (array.length < 2) {
