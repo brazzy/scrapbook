@@ -24,6 +24,9 @@ public class QuickSort {
         rnd = r;
     }
 
+    /**
+     * Performa in-place quicksort (ascending order) of the array.
+     */
     public void quicksort(int[] array) {
         if (array.length < 2) {
             return;
@@ -50,7 +53,7 @@ public class QuickSort {
             break;
         default: // here it gets difficult
 
-            // Points at end of collected pivot element
+            // Points at end of collected pivot elements
             int pivotIndex = rnd.nextInt(end - start) + start;
 
             // pivot element value
@@ -100,9 +103,7 @@ public class QuickSort {
                     higherIndex--;
                 }
             }
-            if (lowerIndex > higherIndex) {
-                lowerIndex--;
-            }
+            lowerIndex--;
 
             // swap pivot elements back towards middle of slice
             int pivotBegin = start;
@@ -118,7 +119,6 @@ public class QuickSort {
 
             }
             quicksort(array, higherIndex, end);
-
         }
     }
 
