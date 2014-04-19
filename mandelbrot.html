@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mandelbrot test</title>
+<script type="text/javascript" src="mandelbrot.js"></script>
+<script type="text/javascript">
+
+window.onload = function(){
+	var d = document.getElementById("display");
+	var c = document.getElementById("control");
+	var m = new Mandelbrot(d, c, 256);
+	m.paint();	
+};
+
+</script>
+</head>
+<body>
+<canvas width="1200" height="800" id="display" style="position: absolute; left: 10px; top: 10px; z-index: 1"></canvas>
+<canvas width="1200" height="800" id="control" style="position: absolute; left: 10px; top: 10px; z-index: 2"></canvas>
+</body>
+</html>
